@@ -1,0 +1,369 @@
+:root {
+  --bg: #f4f5f8;
+  --panel: #ffffff;
+  --ink: #1b1c22;
+  --muted: #676b7a;
+  --line: #e1e4ec;
+  --accent: #2f5ad0;
+  --on-accent: #ffffff;
+  /* 고른 쪽을 짚는 색: 원문은 빨강, 수정본은 노랑. 글자 대조와 같은 색을 쓴다. */
+  --old-bg: #fdecec;
+  --old-ink: #a3222a;
+  --old-edge: #bd7b81;
+  --mark-bg: #fbf0c4;
+  --mark-ink: #6b5310;
+  --mark-edge: #ad9040;
+  /* 다 본 것을 알리는 색. 어느 쪽을 골랐는지와는 상관없다. */
+  --done-ink: #1a6b3c;
+  --done-bg: #e7f6ec;
+  /* 결정을 내린 덩이의 바탕. 아직 안 정한 것과 한눈에 갈린다. */
+  --picked-bg: #ffffff;
+  --font-size: 16px;
+  color-scheme: light;
+}
+
+/* 운영체제 설정을 따르되, 화면에서 직접 고른 값이 있으면 그쪽이 이긴다. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #16171c;
+    --panel: #1e1f26;
+    --ink: #e9e9ec;
+    --muted: #9a9caa;
+    --line: #2f313b;
+    --accent: #7e9bd9;
+    --on-accent: #12141a;
+    --old-bg: #38252a;
+    --old-ink: #e0a3a9;
+    --old-edge: #b2777f;
+    --mark-bg: #38321f;
+    --mark-ink: #dcc78d;
+    --mark-edge: #9a8853;
+    --done-ink: #8dbfa2;
+    --done-bg: #1e2f25;
+    --picked-bg: #2d303e;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #16171c;
+  --panel: #1e1f26;
+  --ink: #e9e9ec;
+  --muted: #9a9caa;
+  --line: #2f313b;
+  --accent: #7e9bd9;
+  --on-accent: #12141a;
+  --old-bg: #38252a;
+  --old-ink: #e0a3a9;
+  --old-edge: #b2777f;
+  --mark-bg: #38321f;
+  --mark-ink: #dcc78d;
+  --mark-edge: #9a8853;
+  --done-ink: #8dbfa2;
+  --done-bg: #1e2f25;
+  --picked-bg: #2d303e;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.6 'Pretendard', 'Malgun Gothic', -apple-system, system-ui, sans-serif;
+  word-break: keep-all;
+}
+
+button, input, select, textarea { font: inherit; color: inherit; }
+
+button {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 7px 13px;
+  cursor: pointer;
+}
+button:hover { border-color: var(--accent); }
+button:disabled { opacity: .45; cursor: not-allowed; }
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+button.text { border: none; background: none; color: var(--muted); padding: 4px 6px; }
+button.text:hover { color: var(--accent); }
+
+a { color: var(--accent); }
+
+/* ---------- 메인 ---------- */
+
+#app { display: flex; flex-direction: column; height: 100vh; }
+
+/* ---------- 상단 바 ---------- */
+
+.topbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+.topbar .home-link {
+  border: none;
+  background: none;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: -.4px;
+  padding: 4px 6px;
+}
+.topbar .grow { flex: 1; }
+.topbar button { padding: 5px 10px; font-size: 13px; }
+.topbar .icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 32px; padding: 5px; }
+.topbar .icon-btn svg { width: 16px; height: 16px; }
+.topbar .font-group { display: inline-flex; align-items: center; gap: 2px; }
+.topbar .font-group output { font-size: 12px; color: var(--muted); min-width: 22px; text-align: center; }
+.topbar [aria-current="page"] { color: var(--accent); font-weight: 700; }
+
+.home { max-width: 860px; margin: 0 auto; padding: 44px 20px 80px; width: 100%; }
+.scroll { flex: 1; overflow-y: auto; }
+.brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 0 0 22px; }
+.brand h1 { font-size: 40px; margin: 0; letter-spacing: -1px; font-weight: 800; }
+.brand em { font-style: normal; font-size: 22px; font-weight: 600; color: var(--muted); }
+.lede { margin: 0 0 6px; font-size: 16px; }
+.lede-note { color: var(--muted); font-size: 14px; margin: 0 0 30px; }
+
+.resume {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  padding: 13px 16px;
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  background: var(--panel);
+}
+.resume > div { flex: 1; display: grid; gap: 2px; min-width: 200px; }
+.resume b { font-size: 14px; }
+.resume small { color: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }
+
+.tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+.tabs button[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 720px) { .pair { grid-template-columns: 1fr; } }
+
+/* 파일 고르기와 붙여넣기의 상자 크기를 맞춘다. 탭을 오갈 때 화면이 덜컹거리지 않게 한다. */
+.slot {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 236px;
+}
+.slot h2 { font-size: 14px; margin: 0; color: var(--muted); font-weight: 600; }
+.slot .file-name { font-weight: 600; overflow-wrap: anywhere; }
+.slot .hint { color: var(--muted); font-size: 13px; margin: 0; }
+.slot textarea {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  background: var(--bg);
+}
+.slot.drop-over { border-color: var(--accent); background: var(--done-bg); }
+
+.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 18px; }
+.actions .spacer { flex: 1; }
+
+.example-full {
+  display: block;
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px;
+  background: transparent;
+  border: 1px dashed var(--line);
+  color: var(--muted);
+  font-size: 14px;
+}
+.example-full:hover { border-style: solid; border-color: var(--accent); color: var(--accent); }
+.status { color: var(--muted); font-size: 13px; min-height: 20px; margin: 14px 0 0; }
+.status.error { color: var(--old-ink); }
+
+.notes { margin-top: 44px; border-top: 1px solid var(--line); padding-top: 22px; color: var(--muted); font-size: 13.5px; }
+.notes h3 { font-size: 14px; color: var(--ink); margin: 22px 0 8px; font-weight: 700; }
+.notes h3:first-child { margin-top: 0; }
+.notes p { margin: 3px 0; }
+.notes p + h3 { margin-top: 24px; }
+
+/* ---------- 작업 화면 ---------- */
+
+.workspace { display: grid; grid-template-columns: 290px 1fr; flex: 1; min-height: 0; }
+@media (max-width: 900px) { .workspace { grid-template-columns: 1fr; min-height: auto; } }
+
+.side {
+  border-right: 1px solid var(--line);
+  background: var(--panel);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.side-top { padding: 14px; border-bottom: 1px solid var(--line); display: grid; gap: 8px; }
+.side-top h2 { font-size: 15px; margin: 0; }
+.doc-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.side-top input { width: 100%; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
+.doc-stat { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); }
+
+.scene-list { overflow-y: auto; flex: 1; padding: 6px; }
+.scene {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  padding: 10px 11px;
+  display: grid;
+  gap: 1px;
+}
+.scene:hover { background: var(--bg); }
+.scene[aria-current="true"] { background: var(--bg); box-shadow: inset 3px 0 0 var(--accent); }
+.scene b { font-weight: 700; font-size: 13px; }
+.scene small { color: var(--muted); font-size: 12px; }
+/* 첫 문장은 어느 단락인지 알아보라고 두 줄까지만 흘려 보여 준다. */
+.scene .preview {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.45;
+}
+.scene .stat { margin-top: 7px; }
+.scene.done .stat { color: var(--done-ink); }
+
+.progress { padding: 12px 14px; border-top: 1px solid var(--line); font-size: 13px; }
+.progress-track { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; margin-top: 6px; }
+.progress-fill { height: 100%; background: var(--accent); width: 0; transition: width .2s; }
+
+.main { display: flex; flex-direction: column; overflow: hidden; }
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+.bar .grow { flex: 1; }
+.bar .names { font-size: 13px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.pane { overflow-y: auto; flex: 1; padding: 18px 16px 120px; font-size: var(--font-size); }
+.scene-block { max-width: 1200px; margin: 0 auto 30px; }
+.scene-head { margin-bottom: 14px; color: var(--muted); font-size: 13px; }
+.scene-head b { display: block; color: var(--ink); font-size: 17px; }
+.scene-head .preview { margin: 3px 0 0; line-height: 1.5; max-width: 70ch; }
+.scene-head .meta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 10px; }
+
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px; }
+@media (max-width: 760px) { .row { grid-template-columns: 1fr; } }
+.cell {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 11px 13px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.cell.empty { color: var(--muted); font-style: italic; background: transparent; border-style: dashed; }
+.row.same .cell { background: transparent; border-color: transparent; padding: 4px 13px; }
+.row.same { margin-bottom: 0; }
+
+/* 아직 안 정한 덩이는 배경에 묻어 있고, 정한 것은 바탕이 또렷해진다.
+   어느 쪽을 골랐는지는 덩이 테두리가 아니라 고른 칸 자체가 말한다. */
+.change { border: 1px solid var(--line); border-radius: 12px; padding: 10px; margin: 14px 0; background: var(--bg); }
+.change.decided { background: var(--picked-bg); border-color: var(--line); box-shadow: 0 1px 3px rgba(0, 0, 0, .06); }
+.change-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; font-size: 13px; color: var(--muted); }
+.change-head .label { font-weight: 600; color: var(--ink); }
+.change-head .spacer { flex: 1; }
+.change-head button[aria-pressed="true"][data-pick="old"] { background: var(--old-bg); border-color: var(--old-edge); color: var(--old-ink); }
+.change-head button[aria-pressed="true"][data-pick="new"] { background: var(--mark-bg); border-color: var(--mark-edge); color: var(--mark-ink); }
+
+/* 고른 칸은 왼쪽에 색 띠를 세우고, 안 고른 칸은 한 걸음 물러난다. */
+.cell.chosen { border-width: 1px; }
+.cell.chosen.side-old { border-color: var(--old-edge); box-shadow: inset 3px 0 0 var(--old-edge); }
+.cell.chosen.side-new { border-color: var(--mark-edge); box-shadow: inset 3px 0 0 var(--mark-edge); }
+.change.decided .cell:not(.chosen) { opacity: .5; }
+
+/* 왼쪽(원문)에서 빠진 글자는 빨강, 오른쪽(수정본)에서 새로 들어온 글자는 노랑.
+   고른 칸을 짚는 색도 같은 둘을 쓴다. 초록은 '다 봤다'는 뜻으로만 남긴다. */
+del { background: var(--old-bg); color: var(--old-ink); text-decoration: none; border-radius: 3px; padding: 0 1px; }
+ins { background: var(--mark-bg); color: var(--mark-ink); text-decoration: none; border-radius: 3px; padding: 0 1px; }
+
+.empty-state { text-align: center; color: var(--muted); padding: 60px 20px; }
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--bg);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .18);
+  z-index: 40;
+}
+
+dialog {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+  color: var(--ink);
+  padding: 20px;
+  max-width: 420px;
+  width: calc(100% - 32px);
+}
+dialog::backdrop { background: rgba(0, 0, 0, .4); }
+dialog h2 { margin: 0 0 10px; font-size: 17px; }
+dialog .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+dialog label { display: block; margin: 10px 0; font-size: 14px; }
+dialog select { width: 100%; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.notes p.gap { margin-top: 14px; }
+
+/* ---------- 패치노트 ---------- */
+
+.patchnotes { max-width: 720px; margin: 0 auto; padding: 44px 20px 80px; width: 100%; }
+.patchnotes h1 { font-size: 26px; margin: 0 0 24px; }
+.release { border-top: 1px solid var(--line); padding: 18px 0 4px; }
+.release:first-of-type { border-top: none; padding-top: 0; }
+.release-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+.release-head b { font-size: 17px; }
+.release-head time { color: var(--muted); font-size: 13px; }
+.release ul { margin: 0; padding-left: 18px; }
+.release li { margin: 4px 0; }
+
+.stack { display: grid; gap: 8px; }
+
+.example-full + .example-full { margin-top: 8px; }
+
+/* 표 한 줄. 칸을 가로로 늘어놓아야 무엇을 묻는 표인지 한눈에 들어온다. */
+.cell.table-line { display: flex; padding: 0; background: var(--panel); border-color: var(--line); }
+.tcell { flex: 1; min-width: 0; padding: 5px 8px; border-left: 1px solid var(--line); overflow-wrap: anywhere; }
+.tcell:first-child { border-left: none; }
+.row.same .cell.table-line { background: var(--panel); border-color: var(--line); }
+.tcell-changed { background: var(--mark-bg); color: var(--mark-ink); }
+.tline { display: block; }
+.tline + .tline { margin-top: 2px; }
