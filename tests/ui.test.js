@@ -144,9 +144,13 @@ test('예문·설문은 둘러보기라 내려받지 않아도 나갈 때 묻지
   startComparison(...docs(), { viewer: true });
   pick(state.comparison.scenes[0].changes[0].id, 'new');
   assert.equal(hasUnsavedWork(), false, '예문은 골라도 작업이 아니다');
+  fresh();
+  assert.equal($('.resume'), null, '예문을 보고 나와도 「검토하던 원고」 띠는 없다');
 
   // 예문을 본 뒤 직접 올린 원고는 다시 작업으로 센다.
   startComparison(...docs());
   pick(state.comparison.scenes[0].changes[0].id, 'new');
   assert.equal(hasUnsavedWork(), true, '올린 원고는 내려받기 전까지 묻는다');
+  fresh();
+  assert.ok($('.resume'), '올린 원고는 돌아갈 길을 열어 둔다');
 });

@@ -62,9 +62,9 @@ export function renderHome() {
   );
 }
 
-/** 비교하던 원고가 아직 메모리에 있으면 돌아갈 길을 열어 둔다. */
+/** 비교하던 원고가 아직 메모리에 있으면 돌아갈 길을 열어 둔다. 예문은 검토하던 원고가 아니다. */
 function resumeBand() {
-  if (!state.comparison) return null;
+  if (!state.comparison || state.viewer) return null;
   const { old: a, new: b } = state.docs;
   return el('div', { class: 'resume' },
     el('div', null,
