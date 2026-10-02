@@ -10,6 +10,7 @@ export const state = {
   query: '',
   view: 'changes',
   saved: true,
+  viewer: false,                   // 예문·설문은 둘러보기일 뿐 작업이 아니다
   theme: read('theme', null),      // null 이면 운영체제 설정을 따른다
   fontSize: Number(read('fontSize', 16)),
 };
@@ -97,7 +98,11 @@ const saveChoices = () => write(storeKey(), JSON.stringify(state.choices));
 // 내려받는 파일 이름은 수정본 이름을 따른다.
 const baseName = () => state.docs.new.name.replace(/\.[^.]+$/, '');
 
-export function startComparison(oldDoc, newDoc) {
+/** 올리거나 붙여넣은 원고를 골라 놓고 아직 내려받지 않았다. 예문은 잃을 것이 없다. */
+export const hasUnsavedWork = () => Boolean(state.comparison) && !state.saved && !state.viewer;
+
+export function startComparison(oldDoc, newDoc, { viewer = false } = {}) {
+  state.viewer = viewer;
   state.docs = { old: oldDoc, new: newDoc };
   state.comparison = compareDocuments(oldDoc, newDoc);
   try {

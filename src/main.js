@@ -1,5 +1,5 @@
 import './style.css';
-import { state, setRenderer, applyTheme } from './state.js';
+import { state, setRenderer, applyTheme, hasUnsavedWork } from './state.js';
 import { renderTopbar } from './ui/topbar.js';
 import { renderHome, openExample } from './ui/home.js';
 import { renderWorkspace } from './ui/workspace.js';
@@ -34,7 +34,7 @@ function currentPage() {
  * 내려받지 않았다면, 브라우저를 닫는 순간 원고를 다시 올려야 한다는 점은 알려야 한다.
  */
 export async function confirmLeave() {
-  if (!state.comparison || state.saved || currentPage() !== 'compare') return true;
+  if (!hasUnsavedWork() || currentPage() !== 'compare') return true;
   return confirmDialog({
     title: '합친 원고를 아직 내려받지 않았습니다',
     message: '지금 나가도 검토 내용은 남아 있어 메인의 「이어서 비교」로 돌아올 수 있습니다. '
@@ -44,7 +44,8 @@ export async function confirmLeave() {
 }
 
 export async function goTo(target) {
-  if (!(await confirmLeave())) return;
+  // 비교 화면으로 들어가는 길은 떠나는 게 아니다. 새 원고를 열 때 묻지 않는다.
+  if (target !== 'compare' && !(await confirmLeave())) return;
   if (target === 'example') return openExample();
   setPage(target);
   render();
@@ -52,6 +53,9 @@ export async function goTo(target) {
 
 function render() {
   const page = currentPage();
+  // 원고 없이 비교 화면을 가리키던 상태(새로 접속한 #compare 등)는 홈으로 바로잡는다.
+  // 그대로 두면 다음에 여는 원고가 「떠나기」로 잡혀 확인창이 뜨고, 탭만 눌러도 그 원고가 튀어나온다.
+  if (page !== state.page) setPage(page);
   const view = page === 'compare' ? renderWorkspace()
     : page === 'patchnotes' ? renderPatchnotes()
       : renderHome();
@@ -70,7 +74,7 @@ window.addEventListener('hashchange', () => {
 
 window.addEventListener('beforeunload', (event) => {
   // 고른 것을 내려받지 않은 채 창을 닫으면 되살릴 길이 없다.
-  if (state.comparison && !state.saved) event.preventDefault();
+  if (hasUnsavedWork()) event.preventDefault();
 });
 
 // 운영체제 설정을 따라가는 중이라면, 설정이 바뀔 때 화면도 따라 바뀐다.

@@ -199,7 +199,7 @@ async function loadExample(key = 'prose') {
       if (!response.ok) throw Error('예문 파일을 받지 못했습니다.');
       return readFile(new File([await response.arrayBuffer()], name));
     }));
-    startComparison(docs[0], docs[1]);
+    startComparison(docs[0], docs[1], { viewer: true });
   } catch (error) {
     setStatus(error.message, true);
   }
